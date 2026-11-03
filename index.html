@@ -54,6 +54,23 @@
 
     <h2>Today's Expenses</h2>
 
+    <label for="category-filter">Show expenses</label>
+
+    <select id="category-filter">
+      <option value="all">All categories</option>
+      <option value="food">Food</option>
+      <option value="transport">Transport</option>
+      <option value="internet">Internet</option>
+      <option value="other">Other</option>
+    </select>
+
+    <p>
+      Total for this view:
+      <strong id="filtered-total">₦0</strong>
+    </p>
+
+    <p>Expenses in this view: <span id="filtered-count">0</span></p>
+
     <ul id="expense-list"></ul>
 
     <p>
@@ -61,7 +78,6 @@
     </p>
 
     <p>Number of expenses: <span id="expense-count">0</span></p>
-    
   </body>
 
   <script src="script.js"></script>

@@ -2,6 +2,7 @@ const form = document.querySelector("#expense-form");
 const expenseList = document.querySelector("#expense-list");
 const totalDisplay = document.querySelector("#total");
 const expenseCountDisplay = document.querySelector("#expense-count");
+const filteredCountDisplay = document.querySelector("#filtered-count");
 
 const descriptionInput = document.querySelector("#description");
 const amountInput = document.querySelector("#amount");
@@ -9,6 +10,13 @@ const categoryInput = document.querySelector("#category");
 
 const storageKey = "expense-tracker-expenses-v1";
 const categories = ["food", "transport", "internet", "other"];
+
+const categoryFilter = document.querySelector("#category-filter");
+const filteredTotalDisplay = document.querySelector("#filtered-total");
+
+categoryFilter.addEventListener("change", function () {
+  renderExpenses();
+});
 
 const startingExpenses = [
   { description: "Food", category: "food", amount: 1500 },
@@ -44,27 +52,37 @@ function saveExpenses(updatedExpenses) {
 function renderExpenses() {
   expenseList.replaceChildren();
 
-  expenseCountDisplay.textContent = expenses.length;
-
-  if (expenses.length === 0) {
-  const message = document.createElement("li");
-  message.textContent = "No expenses yet. Add your first expense above.";
-  expenseList.appendChild(message);
-}
+  const selectedCategory = categoryFilter.value;
+  let visibleCount = 0;
+  let visibleTotal = 0;
 
   expenses.forEach(function (expense, index) {
+    const matchesCategory =
+      selectedCategory === "all" || expense.category === selectedCategory;
+
+    if (!matchesCategory) {
+      return;
+    }
+
+    visibleCount += 1;
+    visibleTotal += expense.amount;
+
+
     const item = document.createElement("li");
+
     if (expense.amount >= 10000) {
-    item.classList.add("large-expense");
-}
+      item.classList.add("large-expense");
+    }
 
     const expenseText = document.createElement("span");
+
     expenseText.textContent =
       `${expense.description} (${expense.category}): ` +
       `₦${expense.amount.toLocaleString("en-NG")}`;
-      if (expense.amount >= 10000) {
+
+    if (expense.amount >= 10000) {
       expenseText.textContent += " — Large expense";
-}
+    }
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
@@ -84,8 +102,23 @@ function renderExpenses() {
     expenseList.appendChild(item);
   });
 
-  totalDisplay.textContent =
-    `₦${calculateTotal(expenses).toLocaleString("en-NG")}`;
+  if (visibleCount === 0) {
+    const message = document.createElement("li");
+
+    message.textContent =
+      expenses.length === 0
+        ? "No expenses yet. Add your first expense above."
+        : "No expenses in this category.";
+
+    expenseList.appendChild(message);
+  }
+
+  filteredTotalDisplay.textContent = `₦${visibleTotal.toLocaleString("en-NG")}`;
+
+  totalDisplay.textContent = `₦${calculateTotal(expenses).toLocaleString("en-NG")}`;
+
+  expenseCountDisplay.textContent = expenses.length;
+  filteredCountDisplay.textContent = visibleCount;
 }
 
 // Read saved records, using defaults only when nothing has been saved.
@@ -93,24 +126,24 @@ function loadExpenses() {
   try {
     const savedExpenses = localStorage.getItem(storageKey);
 
-    const records = savedExpenses === null
-      ? startingExpenses
-      : JSON.parse(savedExpenses);
+    const records =
+      savedExpenses === null ? startingExpenses : JSON.parse(savedExpenses);
 
-    const validRecords = Array.isArray(records) && records.every(
-      function (expense) {
-        return expense !== null &&
+    const validRecords =
+      Array.isArray(records) &&
+      records.every(function (expense) {
+        return (
+          expense !== null &&
           typeof expense === "object" &&
           typeof expense.description === "string" &&
           expense.description.trim() !== "" &&
           categories.includes(expense.category) &&
           Number.isSafeInteger(expense.amount) &&
-          expense.amount > 0;
-      }
-    );
+          expense.amount > 0
+        );
+      });
 
-    if (!validRecords ||
-        !Number.isSafeInteger(calculateTotal(records))) {
+    if (!validRecords || !Number.isSafeInteger(calculateTotal(records))) {
       throw new Error("Invalid saved expenses");
     }
 
@@ -123,7 +156,7 @@ function loadExpenses() {
 
     alert(
       "Unable to load saved expenses. Existing saved data has not " +
-      "been overwritten. Please share this message before continuing."
+        "been overwritten. Please share this message before continuing.",
     );
 
     return false;
@@ -142,8 +175,9 @@ function addExpense(event) {
     return;
   }
 
-  const validAmountFormat =
-    /^(?:[0-9]+|[1-9][0-9]{0,2}(?:,[0-9]{3})+)$/.test(amountText);
+  const validAmountFormat = /^(?:[0-9]+|[1-9][0-9]{0,2}(?:,[0-9]{3})+)$/.test(
+    amountText,
+  );
 
   if (!validAmountFormat) {
     alert("Enter whole naira, such as 2000 or 2,000. No decimals.");
