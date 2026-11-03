@@ -75,3 +75,9 @@ button:focus-visible {
 .delete-button:hover {
     background-color: #8a1c13;
 }
+
+.large-expense {
+    border-left: 4px solid #9a3412;
+    background-color: #fff7ed;
+    padding: 12px;
+}

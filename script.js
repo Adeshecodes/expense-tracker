@@ -54,11 +54,17 @@ function renderExpenses() {
 
   expenses.forEach(function (expense, index) {
     const item = document.createElement("li");
+    if (expense.amount >= 10000) {
+    item.classList.add("large-expense");
+}
 
     const expenseText = document.createElement("span");
     expenseText.textContent =
       `${expense.description} (${expense.category}): ` +
       `₦${expense.amount.toLocaleString("en-NG")}`;
+      if (expense.amount >= 10000) {
+      expenseText.textContent += " — Large expense";
+}
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
