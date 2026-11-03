@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Expense Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <h1>My Expense Tracker</h1>
+    <p>A simple place to record my daily spending.</p>
+
+    <section class="card">
+      <h2>Add an Expense</h2>
+
+      <form id="expense-form">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input
+            type="text"
+            id="description"
+            name="description"
+            placeholder="Example: Lunch"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="amount">Amount in naira</label>
+          <input
+            type="text"
+            id="amount"
+            name="amount"
+            placeholder="Example: 2000 or 2,000"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" name="category" required>
+            <option value="">Choose a category</option>
+            <option value="food">Food</option>
+            <option value="transport">Transport</option>
+            <option value="internet">Internet</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <button type="submit">Add expense</button>
+      </form>
+    </section>
+
+    <h2>Today's Expenses</h2>
+
+    <ul id="expense-list"></ul>
+
+    <p>
+      <strong>Total: <span id="total">Loading...</span></strong>
+    </p>
+
+    <p>Number of expenses: <span id="expense-count">0</span></p>
+    
+  </body>
+
+  <script src="script.js"></script>
+</html>
