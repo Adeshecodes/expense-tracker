@@ -3,7 +3,7 @@ const expenseList = document.querySelector("#expense-list");
 const totalDisplay = document.querySelector("#total");
 const expenseCountDisplay = document.querySelector("#expense-count");
 const filteredCountDisplay = document.querySelector("#filtered-count");
-
+const feedback = document.querySelector("#feedback");
 const descriptionInput = document.querySelector("#description");
 const amountInput = document.querySelector("#amount");
 const categoryInput = document.querySelector("#category");
@@ -15,6 +15,7 @@ const categoryFilter = document.querySelector("#category-filter");
 const filteredTotalDisplay = document.querySelector("#filtered-total");
 
 categoryFilter.addEventListener("change", function () {
+  feedback.textContent = "";
   renderExpenses();
 });
 
@@ -205,9 +206,20 @@ function addExpense(event) {
   const updatedExpenses = [...expenses, newExpense];
 
   if (saveExpenses(updatedExpenses)) {
-    form.reset();
-    descriptionInput.focus();
+  const hiddenByFilter =
+    categoryFilter.value !== "all" &&
+    categoryFilter.value !== category;
+
+  if (hiddenByFilter) {
+    feedback.textContent =
+      "Expense saved. Select All categories to see it.";
+  } else {
+    feedback.textContent = "Expense saved.";
   }
+
+  form.reset();
+  descriptionInput.focus();
+}
 }
 
 if (loadExpenses()) {
