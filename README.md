@@ -21,10 +21,14 @@ A beginner project combining frontend development and manual QA.
 
 ## Running the project
 
-Open the project in VS Code and serve it through a local
-development server.
+1. Download or clone this repository.
+2. Open the project folder in VS Code.
+3. Install the Live Server extension if needed.
+4. Right-click index.html and select "Open with Live Server".
+5. Use the local address it opens to access the application.
 
-Use the same browser and server address to access saved expenses.
+For consistent access to saved expenses, use the same browser,
+browser profile, and local address, including its port number.
 
 ## Testing
 
